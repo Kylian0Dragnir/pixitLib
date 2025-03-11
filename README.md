@@ -1,0 +1,2 @@
+#Installer :
+pip installijfgr
