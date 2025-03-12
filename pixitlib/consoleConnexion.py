@@ -11,12 +11,12 @@ class GameConnexion:
         self.client_socket = None
         self.matrix_socket = None
 
-    def connect(self):
+    def connect(self, game=None):
         """Établit les connexions à la console et à la matrice LED."""
         # Connexion à la console
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_socket.connect((self.host, self.console_port))
-        self.client_socket.sendall(f"Jeu 1 démarré avec {self.player_count} joueur(s)".encode())
+        self.client_socket.sendall(f"{game} démarré avec {self.player_count} joueur(s)".encode())
 
         # Connexion à la matrice LED
         self.matrix_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
