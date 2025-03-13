@@ -10,13 +10,13 @@ class GameConnexion:
 
         self.client_socket = None
         self.matrix_socket = None
+        self.running = True  # Ajout d'un indicateur pour contrôler la boucle
 
     def connect(self, game=None):
         """Établit les connexions à la console et à la matrice LED."""
         # Connexion à la console
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_socket.connect((self.host, self.console_port))
-        self.client_socket.sendall(f"{game} démarré avec {self.player_count} joueur(s)".encode())
 
         # Connexion à la matrice LED
         self.matrix_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -35,21 +35,21 @@ class GameConnexion:
 
     def listen_for_commands(self):
         """Boucle pour écouter les commandes de la console."""
-        running = True
-        while running:
+        while self.running:
             try:
                 command = self.client_socket.recv(1024).decode()
                 if not command:
                     break
                 if command == "KILL":
-                    running = False
+                    self.running = False  # Arrêter la boucle
+                    break
             except ConnectionResetError:
                 print("Connexion à la console perdue.")
-                running = False
+                self.running = False
 
     def close(self):
         """Ferme les connexions proprement."""
-        print("Fin du jeu 1.")
+        print("Fin du jeu.")
         if self.matrix_socket:
             self.matrix_socket.close()
         if self.client_socket:
